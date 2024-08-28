@@ -1,0 +1,6 @@
+QUESTION_ANSWER = 'question_answer'
+STUDENT_ACCOUNT = 'student_account'
+CREDENTIALS = 'credentials'
+JOB_POSTING = 'job_posting'
+APPLICABLE_BRANCHES = 'applicable_branches'
+JOB_APPLICATION = 'job_application'
