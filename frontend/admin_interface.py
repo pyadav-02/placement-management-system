@@ -88,7 +88,7 @@ class AdminInterface:
     def post_job():
         company_name = input('Enter company name: ')
         job_description = input('Enter job description: ')
-        ctc = input('Enter ctc: ')
+        ctc = input('Enter ctc(lpa): ')
         applicable_branches = input('Enter applicable branches(branch, branch, ...): ')
         total_rounds_count = input('Enter total number of rounds: ')
         application_close_date = input('Enter application close date(dd-mm-yyyy): ')

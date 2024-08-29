@@ -8,14 +8,14 @@ class JobFunctionality:
                            job_description,
                            ctc,
                            applicable_branches: str,
-                           total_round_count,
+                           total_rounds_count,
                            application_close_date):
         table_name = tbn.JOB_POSTING
         record = dict(company_name=company_name,
                       job_description=job_description,
                       ctc=ctc,
                       applicable_branches=applicable_branches,
-                      total_round_count=total_round_count,
+                      total_rounds_count=total_rounds_count,
                       current_round='0',
                       application_close_date=application_close_date,
                       applicants_id='=')

@@ -31,7 +31,7 @@ class StudentInterface:
 
     def do_student_function(self):
         print(StudentInterface.MENU)
-        choices = (0, 1, 2, 3, 4)
+        choices = (0, 1, 2, 3, 4, 5)
         choice = frontend_utils.get_choice(choices)
 
         while choice != 0:
@@ -43,6 +43,8 @@ class StudentInterface:
                 self.view_answer_of_question()
             elif choice == 4:
                 ComanInterface.view_job_postings('student')
+            elif choice == 5:
+                self.apply_for_job()
 
             print(StudentInterface.MENU)
             choice = frontend_utils.get_choice(choices)
@@ -78,6 +80,8 @@ class StudentInterface:
         if not JobFunctionality.is_job_id_valid(job_id):
             print('-----invalid job id-----')
             return
-
-        if not JobFunctionality.is_student_eligible(self.student.student_id, job_id):
+        elif not JobFunctionality.is_student_eligible(self.student.student_id, job_id):
             print('-----you are not eligible-----')
+            return
+
+        JobFunctionality.apply_for_job(self.student.student_id, job_id)
