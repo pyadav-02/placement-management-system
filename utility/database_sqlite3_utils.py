@@ -10,14 +10,15 @@ def fetch_record_by_condition(table_name: str,
     query = ('SELECT ' + return_fields_str
              + ' FROM ' + table_name
              + ' WHERE ' + conditions_str + ';')
-    result = execute_query(query, return_data=True)
+    parameter = tuple(str(parameter) for parameter in conditions.values())
+    result = execute_query(query, parameter, return_data=True)
     return result
 
 
 def get_condition_query_string(conditions: dict):
     conditions_list = []
-    for condition, value in conditions.items():
-        condition_string = str(condition) + ' = ' + "'" + str(value) + "'"
+    for condition in conditions.keys():
+        condition_string = str(condition) + ' = ' + '?'
         conditions_list.append(condition_string)
     conditions_list.append('1 = 1')
     conditions_string = ' AND '.join(conditions_list)
@@ -31,15 +32,17 @@ def update_record_by_id(table_name: str,
     updates_string = get_updates_query_string(updates)
     query = ('UPDATE ' + table_name
              + ' SET ' + updates_string
-             + ' WHERE ' + id_field + ' = ' + "'" + id_field_value + "'" + ';')
-    execute_query(query)
+             + ' WHERE ' + id_field + ' = ' + '?' + ';')
+    parameters = tuple(str(parameter) for parameter in updates.values()) + (id_field_value,)
+    execute_query(query, parameters)
 
 
 def get_updates_query_string(updates: dict):
     updates_list = []
-    for update, value in updates.items():
-        update_string = str(update) + ' = ' + "'" + str(value) + "'"
+    for update in updates.keys():
+        update_string = str(update) + ' = ' + '?'
         updates_list.append(update_string)
+
     updates_string = ', '.join(updates_list)
     return updates_string
 
@@ -50,9 +53,10 @@ def delete_record_by_id(tabel_name: str,
                         conditions: dict) -> None:
     conditions_string = get_condition_query_string(conditions)
     query = ('DELETE FROM ' + tabel_name
-             + ' WHERE ' + id_field + ' = ' + "'" + id_field_value + "'" + ' AND '
+             + ' WHERE ' + id_field + ' = ' + '?' + ' AND '
              + conditions_string + ';')
-    execute_query(query)
+    parameters = (id_field_value,) + tuple(str(parameter) for parameter in conditions.values())
+    execute_query(query, parameters)
 
 
 def insert_record(table_name: str,
@@ -60,15 +64,15 @@ def insert_record(table_name: str,
     columns_string, values_string = get_column_value_string(record)
     query = ('INSERT INTO ' + table_name + columns_string
              + ' VALUES' + values_string + ';')
-    execute_query(query)
+    parameters = tuple(parameter for parameter in record.values())
+    execute_query(query, parameters)
 
 
 def get_column_value_string(record):
     columns = record.keys()
     columns_string = '(' + ', '.join(columns) + ')'
 
-    values = record.values()
-    values = ["'" + str(value) + "'" for value in values]
+    values = ['?'] * len(record)
     values_string = '(' + ', '.join(values) + ')'
 
     columns_values_string = (columns_string, values_string)
