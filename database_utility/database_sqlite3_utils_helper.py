@@ -11,17 +11,16 @@ print('connected')
 def execute_query(query, parameters, return_data=False):
     print("*" * 10)
     print(query)
-    print("-" * 10)
     print(parameters)
     print('*' * 10)
 
-    # global cursor
-    # cursor.execute(query, parameters)
-    #
-    # if return_data:
-    #     return cursor.fetchall()
-    # else:
-    #     connection.commit()
+    global cursor
+    cursor.execute(query, parameters)
+
+    if return_data:
+        return cursor.fetchall()
+    else:
+        connection.commit()
 
 
 def disconnect():

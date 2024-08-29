@@ -70,9 +70,9 @@ class StudentInterface:
             return
 
         answer = self.student.get_question_answer(question_id)
-        print('question id:', answer[0])
-        print('question:', answer[1])
-        print('answer:', answer[2])
+        print('question id:', answer[0][0])
+        print('question:', answer[0][1])
+        print('answer:', answer[0][2])
 
     def apply_for_job(self):
         job_id = input('Enter job id: ')

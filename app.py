@@ -1,4 +1,4 @@
-import utility.database_sqlite3_utils_helper as dbh
+import database_utility.database_sqlite3_utils_helper as dbh
 from frontend import main_menu
 
 

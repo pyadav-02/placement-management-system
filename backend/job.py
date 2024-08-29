@@ -1,5 +1,5 @@
 import backend.table_names as tbn
-from utility import database_sqlite3_utils as db
+from database_utility import database_sqlite3_utils as db
 
 
 class JobFunctionality:
@@ -18,7 +18,7 @@ class JobFunctionality:
                       total_rounds_count=total_rounds_count,
                       current_round='0',
                       application_close_date=application_close_date,
-                      applicants_id='=')
+                      applicants_id='0')
         db.insert_record(table_name, record)
 
     @staticmethod
@@ -44,8 +44,9 @@ class JobFunctionality:
         applicants_string = applicants[0][0]
         new_applicants_string = applicants_string + ', ' + student_id
 
+        id_field = 'job_id'
         records = dict(applicants_id=new_applicants_string)
-        db.insert_record(table_name, records)
+        db.update_record_by_id(table_name, id_field, job_id, records)
 
     @staticmethod
     def is_student_eligible(student_id, job_id):
@@ -72,11 +73,53 @@ class JobFunctionality:
         return_fields = ('current_round',)
         conditions = dict(job_id=job_id)
         result = db.fetch_record_by_condition(table_name, return_fields, conditions)
-
+        print(result)
         if not result:
             return False
 
         result = str(result[0][0])
-        if result == 0:
+        if result == '0':
             return True
         return False
+
+    @staticmethod
+    def job_next_round(job_id, new_students_id: tuple[str]):
+        table_name = tbn.JOB_POSTING
+        return_fields = ('total_rounds_count', 'current_round', 'applicants_id', 'company_name')
+        conditions = dict(job_id=job_id)
+        records = db.fetch_record_by_condition(table_name, return_fields, conditions)
+
+        record = records[0]
+        total_round_count = int(record[0])
+        current_round = int(record[1])
+        applicants_id = record[2]
+        company_name = record[3]
+
+        if current_round == total_round_count:
+            JobFunctionality.set_students_job_status(company_name, new_students_id)
+
+            id_field = 'job_id'
+            id_field_value = job_id
+            conditions = dict()
+            db.delete_record_by_id(table_name, id_field, id_field_value, conditions)
+
+
+
+
+
+
+        applicants_id = applicants_id.split(', ')
+
+    @staticmethod
+    def set_students_job_status(company_name, students_id: tuple):
+        table_name = tbn.STUDENT_ACCOUNT
+        updates = dict(company_name=company_name, placement_status='placed')
+
+        conditions = dict()
+        for student_id in students_id:
+            conditions['student_id'] = student_id
+
+        db.update_record_by_condition(table_name, updates, conditions)
+
+
+

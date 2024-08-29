@@ -1,7 +1,7 @@
 import sqlite3
 import pytest
 from unittest.mock import MagicMock
-from utility.database_sqlite3_utils import OpenDatabase
+from database_utility.database_sqlite3_utils import OpenDatabase
 
 
 class TestOpenDatabase:

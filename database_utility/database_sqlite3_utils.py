@@ -1,27 +1,27 @@
-from utility.database_sqlite3_utils_helper import execute_query
+from database_utility.database_sqlite3_utils_helper import execute_query
 
 
 def fetch_record_by_condition(table_name: str,
                               return_fields: tuple,
                               conditions: dict) -> list[tuple]:
     return_fields_str = ', '.join(return_fields)
-    conditions_str = get_condition_query_string(conditions)
+    conditions_str = get_condition_query_string(conditions, 'AND', '1 = 1')
 
     query = ('SELECT ' + return_fields_str
              + ' FROM ' + table_name
              + ' WHERE ' + conditions_str + ';')
-    parameter = tuple(str(parameter) for parameter in conditions.values())
+    parameter = tuple(map(str, conditions.values()))
     result = execute_query(query, parameter, return_data=True)
     return result
 
 
-def get_condition_query_string(conditions: dict):
-    conditions_list = []
+def get_condition_query_string(conditions: dict, logical_operator, special_condition):
+    conditions_list = [special_condition]
     for condition in conditions.keys():
         condition_string = str(condition) + ' = ' + '?'
         conditions_list.append(condition_string)
-    conditions_list.append('1 = 1')
-    conditions_string = ' AND '.join(conditions_list)
+
+    conditions_string = (' ' + logical_operator + ' ').join(conditions_list)
     return conditions_string
 
 
@@ -33,7 +33,7 @@ def update_record_by_id(table_name: str,
     query = ('UPDATE ' + table_name
              + ' SET ' + updates_string
              + ' WHERE ' + id_field + ' = ' + '?' + ';')
-    parameters = tuple(str(parameter) for parameter in updates.values()) + (id_field_value,)
+    parameters = tuple(map(str, updates.values())) + (id_field_value,)
     execute_query(query, parameters)
 
 
@@ -47,15 +47,28 @@ def get_updates_query_string(updates: dict):
     return updates_string
 
 
+def update_record_by_condition(table_name: str,
+                               updates: dict,
+                               conditions: dict) -> None:
+    updates_string = get_updates_query_string(updates)
+    conditions_string = get_condition_query_string(conditions, 'OR', '1 = 2')
+
+    query = ('UPDATE ' + table_name
+             + ' SET ' + updates_string
+             + ' WHERE ' + conditions_string + ';')
+    parameters = tuple(map(str, updates.values())) + tuple(map(str, conditions.values()))
+    execute_query(query, parameters)
+
+
 def delete_record_by_id(tabel_name: str,
                         id_field: str,
                         id_field_value: str,
                         conditions: dict) -> None:
-    conditions_string = get_condition_query_string(conditions)
+    conditions_string = get_condition_query_string(conditions, 'AND', '1 = 1')
     query = ('DELETE FROM ' + tabel_name
              + ' WHERE ' + id_field + ' = ' + '?' + ' AND '
              + conditions_string + ';')
-    parameters = (id_field_value,) + tuple(str(parameter) for parameter in conditions.values())
+    parameters = (id_field_value,) + tuple(map(str, conditions.values()))
     execute_query(query, parameters)
 
 
@@ -64,7 +77,7 @@ def insert_record(table_name: str,
     columns_string, values_string = get_column_value_string(record)
     query = ('INSERT INTO ' + table_name + columns_string
              + ' VALUES' + values_string + ';')
-    parameters = tuple(parameter for parameter in record.values())
+    parameters = tuple(map(str, record.values()))
     execute_query(query, parameters)
 
 

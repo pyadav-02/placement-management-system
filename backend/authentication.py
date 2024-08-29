@@ -1,5 +1,5 @@
 import backend.table_names as tbn
-from utility import database_sqlite3_utils as db
+from database_utility import database_sqlite3_utils as db
 
 
 class AuthenticationFunctionality:
