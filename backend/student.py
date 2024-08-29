@@ -15,7 +15,8 @@ class StudentFunctionality:
                       branch=branch,
                       year=year,
                       cgpa=cgpa,
-                      approval_status='pending')
+                      approval_status='pending',
+                      placement_status='unplaced')
         db.insert_record(table_name, record)
 
     def is_account_approved(self):

@@ -1,4 +1,5 @@
 from backend.admin import AdminFunctionality
+from backend.job import JobFunctionality
 from frontend import frontend_utils
 
 
@@ -9,6 +10,8 @@ class AdminInterface:
     press 2 to approve account request
     press 3 to view all unanswered questions
     press 4 to answer any question
+    press 5 to post job
+    press 6 to view all job postings
     """
 
     def __init__(self, admin_object: AdminFunctionality):
@@ -16,7 +19,7 @@ class AdminInterface:
 
     def do_admin_function(self):
         print(AdminInterface.MENU)
-        choices = (0, 1, 2, 3, 4)
+        choices = (0, 1, 2, 3, 4, 5, 6)
         choice = frontend_utils.get_choice(choices)
 
         while choice != 0:
@@ -28,6 +31,10 @@ class AdminInterface:
                 AdminInterface.view_unanswered_questions()
             elif choice == 4:
                 self.answer_question()
+            elif choice == 5:
+                AdminInterface.post_job()
+            elif choice == 6:
+                AdminInterface.view_job_postings()
 
             print(AdminInterface.MENU)
             choice = frontend_utils.get_choice(choices)
@@ -76,3 +83,28 @@ class AdminInterface:
         answer = input('Enter answer: ')
         self.admin.post_answer(question_id, answer)
 
+    @staticmethod
+    def post_job():
+        company_name = input('Enter company name: ')
+        job_description = input('Enter job description: ')
+        ctc = input('Enter ctc: ')
+        applicable_branches = input('Enter applicable branches(branch, branch, ...): ')
+        total_rounds_count = input('Enter total number of rounds: ')
+        application_close_date = input('Enter application close date(dd-mm-yyyy): ')
+        JobFunctionality.create_job_posting(company_name,
+                                            job_description,
+                                            ctc,
+                                            applicable_branches,
+                                            total_rounds_count,
+                                            application_close_date)
+
+    @staticmethod
+    def view_job_postings():
+        job_postings = JobFunctionality.get_job_postings()
+        attributes = ('job id:', 'company name:', 'job description: ', 'ctc:', 'applicable branches:',
+                      'total rounds:', 'current round:', 'closing date of application(dd-mm-yyyy):')
+        print('-' * 10)
+        for job_posting in job_postings:
+            for attribute, value in zip(attributes, job_posting):
+                print(attribute, value)
+            print('-' * 10)
