@@ -15,8 +15,7 @@ class StudentFunctionality:
                       branch=branch,
                       year=year,
                       cgpa=cgpa,
-                      approval_status='pending',
-                      approver_id='*')
+                      approval_status='pending')
         db.insert_record(table_name, record)
 
     def is_account_approved(self):
@@ -55,9 +54,10 @@ class StudentFunctionality:
         conditions = dict(student_id=self.student_id, question_id=question_id)
         result = db.fetch_record_by_condition(table_name, return_field, conditions)
 
-        if result[0] == ('true',):
+        if not result:
+            return None
+        elif result[0] == ('true',):
             return True
         elif result[0] == ('false',):
             return False
-        else:
-            return None
+

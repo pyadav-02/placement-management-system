@@ -30,8 +30,7 @@ def disconnect():
 # def setup_tables():
 #
 #     question_answer_table = """
-#         insert into credentials
-#         (account_id, password, role)
-#         values ('A962820126', 'R00tP@@s', 'role');
+#
+#
 #         """
 #     execute_query(question_answer_table)

@@ -39,7 +39,6 @@ class AuthInterface:
     @staticmethod
     def account_validator(role) -> bool:
         account_id = input("\nEnter account id: ")
-        password = input("Enter password: ")
 
         if role == 'student':
             student_status = AuthInterface.get_student_account_status(account_id)
@@ -47,6 +46,7 @@ class AuthInterface:
                 print('----account request is not approved yet-----')
                 return False
 
+        password = input("Enter password: ")
         check = AuthenticationFunctionality.is_valid(account_id, password, role)
         if check:
             print('-----login successful-----')

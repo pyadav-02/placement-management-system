@@ -9,7 +9,7 @@ class AdminFunctionality:
     @staticmethod
     def get_unanswered_questions():
         table_name = tbn.QUESTION_ANSWER
-        return_fields = ('student_id', 'question')
+        return_fields = ('question_id', 'student_id', 'question')
         conditions = dict(is_answered='false')
         result = db.fetch_record_by_condition(table_name, return_fields, conditions)
         return result
@@ -20,6 +20,20 @@ class AdminFunctionality:
         id_field_value = question_id
         updates = dict(admin_id=self.__admin_id, answer=answer, is_answered='true')
         db.update_record_by_id(table_name, id_field, id_field_value, updates)
+
+    @staticmethod
+    def get_question_status_by_id(question_id):
+        table_name = tbn.QUESTION_ANSWER
+        return_fields = ('is_answered',)
+        conditions = dict(question_id=question_id)
+        result = db.fetch_record_by_condition(table_name, return_fields, conditions)
+
+        if not result:
+            return None
+        elif result[0] == ('true',):
+            return True
+        elif result[0] == ('false',):
+            return False
 
     @staticmethod
     def get_account_requests():

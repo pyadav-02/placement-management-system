@@ -5,16 +5,16 @@ from frontend.admin_interface import AdminInterface
 
 def start_menu():
     menu = """
+    press 0 to exit
     press 1 for login
     press 2 for creating account
-    press 3 for exit
     """
 
     print(menu)
-    choices = [1, 2, 3]
+    choices = [0, 1, 2]
     choice = utils.get_choice(choices)
 
-    while choice != 3:
+    while choice != 0:
         if choice == 1:
             result = AuthInterface.do_authentication()
 
