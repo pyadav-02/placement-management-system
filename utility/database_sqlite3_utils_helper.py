@@ -27,20 +27,20 @@ def disconnect():
     connection.close()
 
 
-# def setup_tables():
-#
-#     question_answer_table = """
-#     create table job_posting(
-#     job_id integer primary key autoincrement,
-#     company_name text not null,
-#     job_description text not null,
-#     ctc text not null,
-#     applicable_branches text not null,
-#     total_round_count integer not null,
-#     current_round integer not null,
-#     application_close_date text not null,
-#     applicants_id text
-#     );
-#
-#         """
-#     execute_query(question_answer_table)
+def setup_tables():
+
+    question_answer_table = """
+    create table job_posting(
+    job_id integer primary key autoincrement,
+    company_name text not null,
+    job_description text not null,
+    ctc text not null,
+    applicable_branches text not null,
+    total_round_count integer not null,
+    current_round integer not null,
+    application_close_date text not null,
+    applicants_id text
+    );
+
+        """
+    execute_query(question_answer_table)

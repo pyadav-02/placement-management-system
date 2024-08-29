@@ -1,5 +1,6 @@
 from backend.admin import AdminFunctionality
 from backend.job import JobFunctionality
+from frontend.student_admin_comman_interface import ComanInterface
 from frontend import frontend_utils
 
 
@@ -34,7 +35,7 @@ class AdminInterface:
             elif choice == 5:
                 AdminInterface.post_job()
             elif choice == 6:
-                AdminInterface.view_job_postings()
+                ComanInterface.view_job_postings('admin')
 
             print(AdminInterface.MENU)
             choice = frontend_utils.get_choice(choices)
@@ -97,14 +98,3 @@ class AdminInterface:
                                             applicable_branches,
                                             total_rounds_count,
                                             application_close_date)
-
-    @staticmethod
-    def view_job_postings():
-        job_postings = JobFunctionality.get_job_postings()
-        attributes = ('job id:', 'company name:', 'job description: ', 'ctc:', 'applicable branches:',
-                      'total rounds:', 'current round:', 'closing date of application(dd-mm-yyyy):')
-        print('-' * 10)
-        for job_posting in job_postings:
-            for attribute, value in zip(attributes, job_posting):
-                print(attribute, value)
-            print('-' * 10)
