@@ -83,10 +83,20 @@ class AdminFunctionality:
     def is_account_exist(student_id):
         table_name = tbn.STUDENT_ACCOUNT
         return_fields = ('student_id',)
-        conditions = dict()
+        conditions = dict(student_id=student_id)
         result = db.fetch_record_by_condition(table_name, return_fields, conditions)
 
         if result:
             return True
         else:
             return False
+
+    @staticmethod
+    def is_account_approved(student_id):
+        table_name = tbn.STUDENT_ACCOUNT
+        return_field = ('approval_status',)
+        conditions = dict(student_id=student_id)
+        result = db.fetch_record_by_condition(table_name, return_field, conditions)
+        if result[0][0] == 'approved':
+            return True
+        return False

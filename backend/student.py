@@ -19,7 +19,7 @@ class StudentFunctionality:
                       placement_status='unplaced')
         db.insert_record(table_name, record)
 
-    def is_account_approved(self):
+    def get_account_approval_status(self):
         table_name = tbn.STUDENT_ACCOUNT
         return_field = ('approval_status',)
         conditions = dict(student_id=self.student_id)
@@ -61,4 +61,3 @@ class StudentFunctionality:
             return True
         elif result[0] == ('false',):
             return False
-

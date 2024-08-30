@@ -83,32 +83,34 @@ class JobFunctionality:
         return False
 
     @staticmethod
-    def job_next_round(job_id, new_students_id: tuple[str]):
+    def job_next_round(job_id, selected_students_id: tuple[str]):
         table_name = tbn.JOB_POSTING
-        return_fields = ('total_rounds_count', 'current_round', 'applicants_id', 'company_name')
+        return_fields = ('total_rounds_count', 'current_round', 'company_name')
         conditions = dict(job_id=job_id)
         records = db.fetch_record_by_condition(table_name, return_fields, conditions)
-
         record = records[0]
+
         total_round_count = int(record[0])
         current_round = int(record[1])
-        applicants_id = record[2]
-        company_name = record[3]
+        company_name = record[2]
 
         if current_round == total_round_count:
-            JobFunctionality.set_students_job_status(company_name, new_students_id)
+            JobFunctionality.set_students_job_status(company_name, selected_students_id)
 
             id_field = 'job_id'
             id_field_value = job_id
             conditions = dict()
             db.delete_record_by_id(table_name, id_field, id_field_value, conditions)
+            return
 
+        id_field = 'job_id'
+        id_field_value = job_id
 
+        applicants_id = ('0',) + selected_students_id
+        applicants_id = ', '.join(applicants_id)
+        updates = dict(current_round=str(current_round+1), applicants_id=applicants_id)
 
-
-
-
-        applicants_id = applicants_id.split(', ')
+        db.update_record_by_id(table_name, id_field, id_field_value, updates)
 
     @staticmethod
     def set_students_job_status(company_name, students_id: tuple):
@@ -121,5 +123,16 @@ class JobFunctionality:
 
         db.update_record_by_condition(table_name, updates, conditions)
 
+    @staticmethod
+    def is_student_list_valid(job_id, selected_students_id):
+        table_name = tbn.JOB_POSTING
+        return_fields = ('applicants_id',)
+        conditions = dict(job_id=job_id)
+        records = db.fetch_record_by_condition(table_name, return_fields, conditions)
+        record = records[0]
 
-
+        applicants_id = record[0].split(', ')[1:]
+        for selected_student_id in selected_students_id:
+            if selected_student_id not in applicants_id:
+                return False
+        return True

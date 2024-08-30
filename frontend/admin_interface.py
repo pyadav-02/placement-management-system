@@ -54,6 +54,10 @@ class AdminInterface:
         account_id = input('Enter account id: ')
 
         if AdminFunctionality.is_account_exist(account_id):
+            if AdminFunctionality.is_account_approved(account_id):
+                print('----account already approved-----')
+                return
+
             self.admin.approve_student_account_request(account_id)
             print('-----account approved-----')
             return
